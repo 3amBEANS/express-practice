@@ -9,8 +9,7 @@ function App() {
   const [message, setMessage] = useState('');
   const [posts, setPosts] = useState([]);
 
-  useEffect(() =>{
-    const fetchPosts = async () => {
+  const fetchPosts = async () => {
         try{
           const getAll = await axios.get("http://localhost:5000/read/all");
           setPosts(getAll.data);
@@ -19,6 +18,8 @@ function App() {
           console.log("there was an error: " , e);
         }
     }
+
+  useEffect(() =>{    
     fetchPosts();
   }, []);
 
@@ -32,6 +33,7 @@ function App() {
       const response = await axios.post("http://localhost:5000/create", requestBody);
       setName('');
       setMessage('');
+      fetchPosts();
   }
 
   const handleName = (event) => {
