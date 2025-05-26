@@ -36,6 +36,13 @@ function App() {
       fetchPosts();
   }
 
+  const onDelete = async (id) => {
+    console.log(id);
+    
+    await axios.delete(`http://localhost:5000/delete/${id}`);
+    fetchPosts();
+  }
+
   const handleName = (event) => {
     setName(event.target.value);
   };
@@ -43,6 +50,7 @@ function App() {
   const handleMessage = (event) => {
     setMessage(event.target.value);
   }
+  
 
   return (
     <>
@@ -65,9 +73,10 @@ function App() {
           <h2>All Messages</h2>
           <ul>
               {posts.map((msg, index) => (
-              <li key={index}>
-                <strong>{msg.name}:</strong> {msg.message}
-              </li>
+                  <li key={msg.id}>
+                    <strong>{msg.name}:</strong> {msg.message}
+                    <button onClick={() => onDelete(msg.id)}>delete</button>
+                  </li>
             ))}
           </ul>
           

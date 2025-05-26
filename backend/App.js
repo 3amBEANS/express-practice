@@ -28,7 +28,7 @@ app.post('/create', async (req, res) => {
             name: req.body.name,
             message: req.body.message
         };
-       await db.collection("messages").doc(id).set(userJson)
+       await db.collection("messages").add(userJson)
        res.status(200).send({ success: true, message: "Document created successfully" });
        res.status(404).send({what: "why is this going wrong,"})
         //res.send(response);
@@ -45,7 +45,10 @@ app.get('/read/all', async (req, res) => {
         const response = await usersRef.get();
         responseArr = [];
         response.forEach(doc => {
-            responseArr.push(doc.data());
+            responseArr.push({
+                id: doc.id,
+                ...doc.data()
+        });
         });
         res.send(responseArr);
     }
@@ -54,6 +57,18 @@ app.get('/read/all', async (req, res) => {
         res.status(500).send({ success: false, message: "Error writing document" , error: e});
     }
 
+})
+
+app.delete('/delete/:id', async (req, res) => {
+    try{
+        const docRef = db.collection("messages").doc(req.params.id);
+        await docRef.delete();
+        res.status(200).send({ success: true, message: "Document deleted successfully" });
+        console.log("This has worked semi-successfuly");
+    }catch(e){
+        res.status(500).send({ success: false, message: "Error deleting document" , error: e});
+        
+    }
 })
 
 
